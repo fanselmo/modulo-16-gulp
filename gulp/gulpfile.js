@@ -1,0 +1,35 @@
+const gulp = require('gulp');
+const sass = require('gulp-sass')(require('sass'));
+const uglify = require('gulp-uglify');
+const imagemin = require('gulp-imagemin');
+
+function otimizaImagens() {
+    return gulp
+        .src('./src/images/**/*')
+        .pipe(imagemin())
+        .pipe(gulp.dest('./build/images'))
+}
+
+function compressJavascript() {
+    return gulp
+        .src('./src/scripts/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('./build/scripts'))
+}
+
+function compilaSass() {
+    return gulp
+        .src('./src/styles/main.scss')
+        .pipe(sass({ outputStyle: 'compressed'}))
+        .pipe(gulp.dest('./build/styles'))
+}
+
+/* SEPARADAMENTE SERIA ASSIM:
+
+exports.sass = compilaSass;
+exports.js = compressJavascript;
+exports.images = otimizaImagens; */
+
+/* TODAS AS TAREFAS EM PARALELO */
+
+exports.default = gulp.parallel(compilaSass, compressJavascript, otimizaImagens);
